@@ -322,12 +322,13 @@ public class RandomLayout extends ViewGroup {
             }
         }
     }
-
+   //todo 设置TextView
     private TextView getTextView(LayoutData layoutData) {
         int tvPadding = pxForDp(mTvPadding);
         int tvMarginX = pxForDp(mTvMarginX);
         int tvMarginY = pxForDp(mTvMarginY);
-        int tvTextSize = pxForSp(layoutData.getTextSize());
+        //int tvTextSize = pxForSp(layoutData.getTextSize());
+        int tvTextSize = pxForSp(mRandom.nextInt(10-6+1)+6);
         TextView textView = new TextView(mContext);
         textView.setText(layoutData.getText());
         textView.setTextSize(tvTextSize);

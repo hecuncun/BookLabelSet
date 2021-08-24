@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     )
     var tag2 = arrayOf(
         "FT中文网", "财经网", "创业家", "福布斯",
-        "新财富杂志", "环球企业家", "中国证券报", "证券时报网",
+        "新财富杂", "环球企业", "中国证券", "证券时报网",
         "商学院", "财新网", "华夏时报", "第一财经"
     )
 
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
          mBinding = ActivityMainBinding.inflate(layoutInflater)
          setContentView(mBinding.root)
-         mBinding.flyout.setData(tag1)
+         mBinding.flyout.setData(tag1,tag2)
          mBinding.flyout.setOnFlyEverythingListener(object :FlyLayout.OnFlyEverythingListener{
             override fun onItemClick(view: View?, position: Int, text: String?) {
                 Toast.makeText(this@MainActivity, text, Toast.LENGTH_SHORT).show()

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">BookLabelSet</string>
+    <string name="at_most_5">（最多选5个）</string>
+    <string name="change">换一换</string>
+    <string name="jump">跳过</string>
+    <string name="start_read_road">开启阅读之旅</string>
+    <string name="choice_your_books_label">选择你喜欢的书籍标签</string>
 </resources>

@@ -1,44 +1,77 @@
 package com.example.booklabelset
 
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import android.util.Log
 import android.widget.Toast
 import com.example.booklabelset.databinding.ActivityMainBinding
-import com.example.booklabelset.randomlayout.FlyLayout
-import com.example.booklabelset.randomlayout.RandomLayout
+
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var mBinding :ActivityMainBinding
-    var tag1 = arrayOf(
-        "校园剧情", "城市恋情", "言情小说", "武侠小说",
-        "男生小说", "玄幻小说", "国际金融", "中国证券",
-        "中国经营", "经济观察报", "中国经济网", "大年初一"
-    )
-    var tag2 = arrayOf(
-        "FT中文网", "财经网", "创业家", "福布斯",
-        "新财富杂", "环球企业", "中国证券", "证券时报网",
-        "商学院", "财新网", "华夏时报", "第一财经"
-    )
-
+    private lateinit var mBinding: ActivityMainBinding
+    private var listTag = mutableListOf<Tag>()
+    private var listSelectedTag = mutableListOf<Tag>()
+    private val adapter by lazy {
+        TagCloudViewAdapter(listTag)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-         mBinding = ActivityMainBinding.inflate(layoutInflater)
-         setContentView(mBinding.root)
-         mBinding.flyout.setData(tag1,tag2)
-         mBinding.flyout.setOnFlyEverythingListener(object :FlyLayout.OnFlyEverythingListener{
-            override fun onItemClick(view: View?, position: Int, text: String?) {
-                Toast.makeText(this@MainActivity, text, Toast.LENGTH_SHORT).show()
+        mBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(mBinding.root)
+        initData()
+        initListener()
+        initView()
+    }
+
+    private fun initView() {
+        mBinding.tagCloudView.setAdapter(adapter)
+    }
+
+
+    private fun initListener() {
+        mBinding.tagCloudView.setOnTagClickListener { parent, view, position ->
+          //  view.isSelected = !view.isSelected
+            // 设置标签选中状态
+            listTag[position].selected =!listTag[position].selected
+            view.isSelected = listTag[position].selected
+            if (view.isSelected) {
+                if (listSelectedTag.size<5){
+                    Log.e("TAG","SIZE = ${listSelectedTag.size}")
+                    listSelectedTag.add(listTag[position])
+                    val drawable = GradientDrawable()
+                    drawable.setColor(Color.parseColor("#7187FF"))
+                    drawable.cornerRadius = 21f.dp
+                    view.setBackgroundDrawable(drawable)
+                }else{
+                    listTag[position].selected = false
+                    view.isSelected = false
+                    Toast.makeText(this, "最多选择5个", Toast.LENGTH_SHORT).show();
+                    return@setOnTagClickListener
+                }
+
+            } else {
+                listSelectedTag.remove(listTag[position])
             }
+            Toast.makeText(this, "点击过的标签：$listSelectedTag", Toast.LENGTH_SHORT).show();
+        }
 
-            override fun onAnimationEnd(randomLayout: RandomLayout?, animationCount: Int) {
-
+        mBinding.tvChange.setOnClickListener {
+            listTag.clear()
+            listTag.addAll(listSelectedTag)
+            for (i in 0..(11 - listSelectedTag.size)) {
+                listTag.add(Tag("新标签$i", false))
             }
+            adapter.notifyDataSetChanged()
 
-        })
-        mBinding.button.setOnClickListener {
-            mBinding.flyout.setData(tag2)
+        }
+    }
+
+    private fun initData() {
+        for (i in 0..11) {
+            listTag.add(Tag("标签$i", false))
         }
     }
 }
